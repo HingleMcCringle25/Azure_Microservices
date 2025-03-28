@@ -25,6 +25,7 @@ namespace TicketAPI.Controllers
         [HttpPost]
         public IActionResult Post(Ticket ticket)
         {
+            /*
             //validate ticket
             if (string.IsNullOrEmpty(ticket.FirstName))
             {
@@ -33,6 +34,12 @@ namespace TicketAPI.Controllers
             if (string.IsNullOrEmpty(ticket.LastName))
             {
                 return BadRequest("Invalid last name");
+            }
+            */
+
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
             }
 
             return Ok("Hello " + ticket.FirstName + " " + ticket.LastName + " from TicketController!");
