@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Storage.Queues;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace TicketAPI.Controllers
 {
@@ -23,26 +25,35 @@ namespace TicketAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Ticket ticket)
+        public async Task<IActionResult> Post(Ticket ticket)
         {
-            /*
             //validate ticket
-            if (string.IsNullOrEmpty(ticket.FirstName))
-            {
-                return BadRequest("Invalid first name");
-            }
-            if (string.IsNullOrEmpty(ticket.LastName))
-            {
-                return BadRequest("Invalid last name");
-            }
-            */
 
             if (ModelState.IsValid == false)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok("Hello " + ticket.FirstName + " " + ticket.LastName + " from TicketController!");
+            //post message to azure storage queue
+            string queueName = "tickets";
+            
+            //get connection string
+            string? connectionString = _configuration["AzureStorageConnectionString"];
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                return BadRequest("An error has occured.");
+            }
+
+            QueueClient queueClient = new QueueClient(connectionString, queueName);
+
+            //serialize an object to json
+            string message = JsonSerializer.Serialize(ticket);
+
+            //send string message to queue
+            await queueClient.SendMessageAsync(message);
+
+            return Ok("Hello " + ticket.FirstName + " " + ticket.LastName + ". Contact sent to storage queue.");
         }
     }
 }
