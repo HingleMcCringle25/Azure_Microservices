@@ -25,7 +25,7 @@ namespace TicketAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Ticket ticket)
+        public async Task<IActionResult> Post(TicketHub ticket)
         {
             //validate ticket
 
@@ -53,7 +53,7 @@ namespace TicketAPI.Controllers
             //send string message to queue
             await queueClient.SendMessageAsync(message);
 
-            return Ok("Hello " + ticket.FirstName + " " + ticket.LastName + ". Contact sent to storage queue.");
+            return Ok("Ticket information sent to storage queue.");
         }
     }
 }
