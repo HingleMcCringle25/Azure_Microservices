@@ -7,8 +7,6 @@ namespace TicketAPI
     
     public class TicketHub
     {
-        [Required(ErrorMessage = "Concert name is required.")]
-        public string concertName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Concert must have an ID.")]
         public int concertId { get; set; } = 0;
