@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Queues;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using System.Text.Json;
 
 namespace TicketAPI.Controllers
@@ -50,8 +51,9 @@ namespace TicketAPI.Controllers
             //serialize an object to json
             string message = JsonSerializer.Serialize(ticket);
 
-            //send string message to queue
-            await queueClient.SendMessageAsync(message);
+            //send string message to queue (encode to base 64)
+            var plainTextBytes = Encoding.UTF8.GetBytes(message);
+            await queueClient.SendMessageAsync(Convert.ToBase64String(plainTextBytes));
 
             return Ok("Ticket information sent to storage queue.");
         }

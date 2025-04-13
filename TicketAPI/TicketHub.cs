@@ -25,7 +25,7 @@ namespace TicketAPI
         public string phone {  get; set; } = string.Empty;
 
         [Required]
-        [Range(0, 1000, MinimumIsExclusive = true, MaximumIsExclusive = false, ErrorMessage = "Minimum selection of 1.")]
+        [Range(0, 10, MinimumIsExclusive = true, MaximumIsExclusive = false, ErrorMessage = "Minimum selection of 1.")]
         public int quantity { get; set; } = 0;
 
         [Required]
